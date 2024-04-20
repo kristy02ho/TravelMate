@@ -56,5 +56,25 @@ UserSchema.methods.comparePassword = function (password, callback) {
     })
 }
 
+// const User = mongoose.model('User', UserSchema);
+
+// const users = [
+//   {
+//     name: "Alice",
+//     username: "alice123",
+//     password: "password123",
+//     hobby: "Photography",
+//     placesToVisit: [],
+//     placesVisited: []
+//   },
+// ];
+
+// users.forEach(userData => {
+//   const user = new User(userData);
+//   user.save()
+//     .then(() => console.log(`Saved user`))
+//     .catch(err => console.error('Error saving user:', err));
+// });
+
 //return the model to server
 module.exports = mongoose.model('User', UserSchema);
