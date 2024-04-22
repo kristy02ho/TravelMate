@@ -7,6 +7,8 @@ var jwt = require("jsonwebtoken");
 var cors = require("cors");
 var User = require("./Users");
 var Places = require("./Places");
+var Itinerary = require("./Itinerary");
+var Posts = require("./Posts")
 const mongoose = require("mongoose");
 
 
@@ -93,7 +95,23 @@ router.post("/signup", function (req, res) {
     )
 })
 
-
+router.route("/itinerary").get((req, res) => {
+  Itinerary.find({
+      $and: [
+          { imageUrl: { $exists: true, $ne: null } },
+          { title: { $exists: true, $ne: null } },
+          { location: { $exists: true, $ne: null } },
+          { category: { $exists: true, $ne: null } },
+          { itinerary: { $exists: true, $ne: null } }
+      ]
+  }, (err, itineraries) => {
+      if (err) {
+          res.status(400).send(err);
+      } else {
+          res.status(200).json(itineraries);
+      }
+  });
+});
 
 app.use("/", router);
 app.listen(process.env.PORT || 8080);
