@@ -113,6 +113,24 @@ router.route("/itinerary").get((req, res) => {
   });
 });
 
+router.route("/posts").get((req, res) => {
+  Posts.find({
+      $and: [
+          { name: { $exists: true, $ne: null } },
+          { location: { $exists: true, $ne: null } },
+          { content: { $exists: true, $ne: null } },
+          { date: { $exists: true, $ne: null } },
+      ]
+  }, (err, posts) => {
+      if (err) {
+          res.status(400).send(err);
+      } else {
+          res.status(200).json(posts);
+      }
+  });
+})
+
+
 app.use("/", router);
 app.listen(process.env.PORT || 8080);
 module.exports = app; // for testing only
