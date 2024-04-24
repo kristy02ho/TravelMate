@@ -145,6 +145,37 @@ router.route("/posts").get((req, res) => {
   });
 })
 
+router.route("/posts").post((req, res) => {
+  const { name, location, image, content } = req.body;
+  var today = new Date();
+  var dd = String(today.getDate()).padStart(2, '0');
+  var mm = String(today.getMonth() + 1).padStart(2, '0');
+  var yyyy = today.getFullYear();
+  today = mm + '/' + dd + '/' + yyyy;
+  // Validate required fields
+  if (!name || !location || !content || !image) {
+      return res.status(400).json({ message: "All fields are required." });
+  }
+
+  const newPost = new Posts({
+      name,
+      location,
+      image,
+      content,
+      likes: 0,
+      date: today
+  });
+
+  newPost.save((err, post) => {
+      if (err) {
+          return res.status(400).send(err);
+      }
+      res.status(201).json(post);
+  });
+});
+
+
+
 
 app.use("/", router);
 app.listen(process.env.PORT || 8080);

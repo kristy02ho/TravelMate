@@ -5,13 +5,13 @@ mongoose.connect(process.env.DB);
 
 // Post schema
 const PostSchema = new Schema({
-    id: { type: Number, required: true },
+    id: { type: Number},
     name: { type: String, required: true },
     location: { type: String, required: true },
     content: { type: String, required: true },
     image: { type: String, required: true },
-    likes: { type: Number, required: true },
-    date: { type: String, required: true },
+    likes: { type: Number, default: 0 },
+    date: { type: String, default: Date.now },
 });
 
 
