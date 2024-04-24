@@ -98,6 +98,7 @@ router.post("/signup", function (req, res) {
 router.route("/itinerary").get((req, res) => {
   Itinerary.find({
       $and: [
+          { _id: {$exists: true, $ne: null }},
           { imageUrl: { $exists: true, $ne: null } },
           { title: { $exists: true, $ne: null } },
           { location: { $exists: true, $ne: null } },
@@ -112,6 +113,20 @@ router.route("/itinerary").get((req, res) => {
       }
   });
 });
+
+router.route("/itinerary/:id").get((req, res) => {
+  const itineraryId = req.params.id;
+  Itinerary.find({ _id: itineraryId }, (err, itinerary) => {
+    if (err) {
+      res.status(400).send(err);
+    } else if (itinerary.length === 0) {
+      res.status(404).json({ error: "Itinerary not found" });
+    } else {
+      res.status(200).json(itinerary);
+    }
+  });
+});
+
 
 router.route("/posts").get((req, res) => {
   Posts.find({
