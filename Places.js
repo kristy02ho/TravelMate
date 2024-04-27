@@ -8,6 +8,7 @@ const PlacesSchema = new mongoose.Schema({
     city: { type: String, required: true, index: true },
     country: { type: String, required: true, index: true },
     continent: { type: String, required: true, index: true },
+    imageUrl: { type: String, required: true },
     activities: [{
         imageUrl: {type: String},
         activityName: {type: String },

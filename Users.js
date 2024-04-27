@@ -18,13 +18,12 @@ var UserSchema = new Schema({
     name: String,
     username: { type: String, required: true, index: { unique: true }},
     password: { type: String, required: true, select: false },
-    hobby: {
+    biography: { type: String },
+    imageUrl: { type: String },
+    hobby: [{
         type: String,
-        enum: [
-          'Swimming', 'Photography', 'Dance', 'Cooking', 'Music', 'Hiking'
-        ],
-        required: true
-      },
+        enum: ['Swimming', 'Photography', 'Dance', 'Cooking', 'Music', 'Hiking']
+      }],      
     placesToVisit: [{
         placeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Places' },
       }],

@@ -32,7 +32,6 @@ router.post("/signup", function (req, res) {
       user.name = req.body.name;
       user.username = req.body.username;
       user.password = req.body.password;
-      user.hobby = req.body.hobby;
   
       user.save(function (err) {
         if (err) {
@@ -48,6 +47,27 @@ router.post("/signup", function (req, res) {
       });
     }
   });
+
+  router.put("/signup/:username", function (req, res) {
+    const currentUser = req.params.username;
+    const { biography, imageUrl, hobby, placesToVisit, placesVisited } = req.body;
+  
+    User.findOneAndUpdate(
+      { username: currentUser },
+      { biography, imageUrl, hobby, placesToVisit, placesVisited },
+      { new: true },
+      (err, updatedUser) => {
+        if (err) {
+          res.status(400).send(err);
+        } else if (!updatedUser) {
+          res.status(404).json({ error: "User not found" });
+        } else {
+          res.status(200).json(updatedUser);
+        }
+      }
+    );
+  });
+  
   
   router.post("/signin", function (req, res) {
     var userNew = new User();
@@ -59,6 +79,12 @@ router.post("/signup", function (req, res) {
       .exec(function (err, user) {
         if (err) {
           res.send(err);
+        }
+  
+        if (!user) {
+          // User not found in the database
+          res.status(401).send({ success: false, msg: "Authentication failed." });
+          return;
         }
   
         user.comparePassword(userNew.password, function (isMatch) {
@@ -73,9 +99,8 @@ router.post("/signup", function (req, res) {
           }
         });
       });
-
   });
-
+  
   router
   .route("/places")
   .get((req, res) => {
@@ -83,7 +108,8 @@ router.post("/signup", function (req, res) {
         {
             city: { $exists: true, $ne: null },
             country: { $exists: true, $ne: null },
-            continent: { $exists: true, $ne: null }
+            continent: { $exists: true, $ne: null },
+            imageUrl: { $exists: true, $ne: null }
         },
         (err, places) => {
             if (err) {
@@ -174,6 +200,19 @@ router.route("/posts").post((req, res) => {
   });
 });
 
+router.route("/profile/:username")
+  .get((req, res) => {
+    const userUsername = req.params.title;
+    User.find({ username: userUsername }, (err, movie) => {
+      if (err) {
+        res.status(400).send(err);
+      } else if (user.length === 0) {
+        res.status(404).json({ error: "Movie not found" });
+      } else {
+        res.status(200).json(movie);
+      }
+    });
+  })
 
 
 
