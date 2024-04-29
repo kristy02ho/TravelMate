@@ -202,17 +202,21 @@ router.route("/posts").post((req, res) => {
 
 router.route("/profile/:username")
   .get((req, res) => {
-    const userUsername = req.params.title;
-    User.find({ username: userUsername }, (err, movie) => {
-      if (err) {
-        res.status(400).send(err);
-      } else if (user.length === 0) {
-        res.status(404).json({ error: "Movie not found" });
-      } else {
-        res.status(200).json(movie);
-      }
-    });
-  })
+    const { username } = req.params;
+    User.findOne({ username })
+      .populate('placesToVisit.placeId')
+      .populate('placesVisited.placeId')
+      .exec((err, user) => {
+        if (err) {
+          res.status(400).send(err);
+        } else if (!user) {
+          res.status(404).json({ error: "User not found" });
+        } else {
+          res.status(200).json(user);
+        }
+      });
+  });
+
 
 
 
